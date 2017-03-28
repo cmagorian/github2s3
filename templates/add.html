@@ -1,0 +1,40 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container">
+
+	<!-- add form -->
+	<div id="add-page">
+		<div class="subcription-info text-center">
+			<form class="subscribe_form">
+				<div class="wow flipInX">
+					<label for="at" class="sub-p">Repo Access Token</label>
+					<input type="text" name="at" class="form-control" id="at" placeholder="Enter your Access Token for Github..." required value>
+				</div>
+				<div class="wow flipInX">
+					<label for="repo-url" class="sub-p">Repo URL</label>
+					<input type="text" name="repo-url" class="form-control" id="repo-url" placeholder="Enter the Repo you want backed up..." required value>
+				</div>
+				<div class="wow flipInX">
+					<label for="name" class="sub-p">Repo Name</label>
+					<input type="text" name="name" class="form-control" id="name" placeholder="Enter the name of the Repo..." required value>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- btn block -->
+	<div class="wow flipInX">
+		<div class="text-center">
+			<button id="sbm-repo" class="contact-submit">Add Repo</button>
+		</div>
+	</div>
+
+	<!-- Message block -->
+	<div class="wow flipInX">
+		<div class="text-center">
+			<div id="msgBox" style="padding-top: 25px;"><p></p></div>	
+		</div>
+	</div>
+
+</div>
+{% endblock %}

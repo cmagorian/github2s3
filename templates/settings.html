@@ -1,0 +1,71 @@
+{% extends 'main.html' %}
+{% block content %}
+<style type="text/css">
+	.text-center {
+		margin-top: 5%;
+	}
+</style>
+<div class="container">
+	<div id="settings">
+		<h2>Settings</h2>
+		<p>Please enter information below to setup your GitHub and AWS.</p>
+		<div class="col-sm-8">
+			<form id="part1">
+				<div class="wow flipInX">
+					<label for="atid" class="sub-p">Access Token ID</label>
+					<input type="text" name="atid" class="form-control" id="atid" placeholder="Enter your AWS Access Token ID.." data-parsley-group="id" data-parsley-length="[17, 28]" required value="{{ atid }}">
+				</div>
+				<div class="wow flipInX">
+					<label for="atsk" class="sub-p">Access Token Secret Key</label>
+					<input type="text" name="atsk" class="form-control" id="atsk" placeholder="Enter your AWS Access Token Secret Key..." data-parsley-group="sk" data-parsley-length="[36, 48]" required value="{{ atsk }}">
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-4">
+			<form id="part2">
+				<!-- DONT NEED FUNC
+				<div class="wow flipInX">
+					<label for="buf" class="sub-p">Amt. of Backups (Daily)</label>
+					<input type="number" name="buf" class="form-control" id="buf" placeholder="Enter number..." required min="1" max="6" data-parsley-group="amt" data-parsley-type="number">
+				</div>
+				-->
+				<div class="wow flipInX">
+					<label for="backups" class="sub-p">Backups (On/Off)</label>
+					<label class="switch">
+						<input type="checkbox" name="backups" id="backups">
+						<div class="slider round"></div>
+					</label>
+				</div>
+			</form>
+		</div>
+		<hr>
+		<br>
+		<br>
+		<div class="col-md-12">
+			<!-- btn block -->
+			<div class="wow flipInX">
+				<div class="text-center">
+					<button id="upd" class="contact-submit">Update Settings</button>
+				</div>
+			</div>
+			<div class="wow flipInX">
+				<div class="text-center">
+					<div id="finalMsg"><p></p></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	var bu = '{{ backups }}';
+	if (bu == 'on'){
+		$('#backups').prop('checked', true);
+	} else {
+		$('#backups').prop('checked', false);
+	}
+
+	$('#buf').val({{ buf }});
+});
+</script>
+{% endblock %}

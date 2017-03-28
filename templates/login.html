@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+{% block content %}
+<div id="login-cont">
+	<div class="col-md-10 col-md-offset-1">
+		<form class="contactForm" action="{{ url_for('login') }}" method="post">
+			<div class="form-group wow flipInX">
+				<label for="username">Username</label>
+				<input type="text" name="username" id="usr" class="form-control" placeholder="Usr." value="{{
+	          request.form.username }}">
+			</div>
+			<div class="form-group wow flipInX">
+				<label for="password">Password</label>
+				<input type="password" name="password" id="pwd" class="form-control" placeholder="Pwd." value="{{
+	          request.form.password }}">
+			</div>
+			<input type="submit" name="submit" class="contact-submit" value="Login">
+		</form>
+		<hr>
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				{% for message in messages %}
+					<p class="sys-message">{{ message }}</p>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+	</div>
+</div>
+{% endblock %}

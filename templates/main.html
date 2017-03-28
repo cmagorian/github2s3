@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GitHub to S3 | {{ page }}</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/animate.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+</head>
+<body>
+	<div class="container">
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<ol class="breadcrumb">
+				<li id="add"><a href="{{ url_for('add') }}">Add Repo</a></li>
+				<li id="all" ><a href="{{ url_for('all') }}">All Repos</a></li>
+				<li id="setts"><a href="{{ url_for('settings') }}">Settings</a></li>
+				<li id="logout"><a href="{{ url_for('logout') }}">Logout</a></li>
+			</ol>
+		</nav>
+		{% block content %}{% endblock %}
+		<footer class="footer">
+			<div class="container">
+				<div class="row bort">
+					<div class="copyright">
+						© Chris Magorian / christophermagorian@gmail.com / 410.375.3446
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/parsley.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/wow.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/commands.js') }}"></script>
+<script type="text/javascript">new WOW().init();</script>
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+	});
+</script>
+</body>
+</html>

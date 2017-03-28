@@ -1,0 +1,159 @@
+//SETTINGS IF ELSE LOGIC FOR AJAX AND SQL
+
+if _type == 'select':
+		cursor.execute("SELECT * FROM Settings WHERE SID = (%s)", (SID))
+		conn.commit()
+		x = cursor.fetchone()
+		conn.close()
+		return x
+	else:
+		if _type == 'atid':
+			cursor.execute("UPDATE Settings SET atid = %s WHERE SID = %s", (_atid, SID))
+			conn.commit()
+			x = cursor.fetchone()
+			conn.close()
+			return x
+		elif _type == 'atsk':
+			cursor.execute("UPDATE Settings SET atsk = %s WHERE SID = %s", (_atsk, SID))
+			conn.commit()
+			x = cursor.fetchone()
+			conn.close()
+			return x
+		elif _type == 'buf':
+			cursor.execute("UPDATE Settings SET buf = %s WHERE SID = %s", (_buf, SID))
+			conn.commit()
+			x = cursor.fetchone()
+			conn.close()
+			return x
+		elif _type == 'backups':
+			cursor.execute("UPDATE Settings SET backups = %s WHERE SID = %s", (_backups, SID))
+			conn.commit()
+			x = cursor.fetchone()
+			conn.close()
+			return x;
+		else:
+			return "ERR_SQL_Settings"
+
+
+// ALL REPOS LOGIC FOR SHOWING TABLE OF REPOS
+
+<table class="table table-responsive">
+			<thead class="wow flipInX">
+				<th>RID</th>
+				<th>AT</th>
+				<th>URI</th>
+				<th>Date/Time</th>
+				<th>Name of Repo</th>
+			</thead>
+			<tbody>
+			{% for item in data %}
+				<tr class="wow flipInX">
+					<td>{{ item[0] }}</td>
+					<td>{{ item[1] }}</td>
+					<td>{{ item[2] }}</td>
+					<td>{{ item[3] }}</td>
+					<td>{{ item[4] }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table><!-- Table -->
+
+
+def upload_repo_S3(s3_conn, bucket_name, sourceDir):
+
+	MAX_SIZE = 20 * 1000 * 1000
+	PART_SIZE = 6 * 1000 * 1000
+
+	destDir = ''
+
+	bucket = s3_conn.create_bucket(bucket_name, location=boto.s3.connection.Location.DEFAULT)
+
+	uploadFileNames = []
+	for (sourceDir, dirname, filename) in os.walk(sourceDir):
+		uploadFileNames.extend(filename)
+		break
+
+	def percent_cb(complete, total):
+		sys.stdout.write('.')
+		sys.stdout.flush()
+
+	for filename in uploadFileNames:
+		sourcepath = os.path.join(sourceDir + filename)
+		destpath = os.path.join(destDir, filename)
+		print 'Uploading %s to Amazon S3 bucket %s' % (sourcepath, bucket_name)
+
+		filesize = os.path.getsize(sourcepath)
+		if filesize > MAX_SIZE:
+			print "Multipart upload"
+			mp = bucket.initiate_multipart_upload(destpath)
+			fp = open(sourcepath, 'rb')
+			fp_num = 0
+			while (fp.tell() < filesize):
+				fp_num += 1
+				print "uploading part %i" %fp_num
+				mp.upload_part_from_file(fp, fp_num, cb=percent_cb, num_cb=10, size=PART_SIZE)
+
+			mp.complete_upload()
+
+		else:
+			print "singlepart upload"
+			k = boto.s3.key.Key(bucket)
+			k.key = destpath
+			k.set_contents_from_filename(sourcepath, cb=percent_cb, num_cb=10)
+
+
+
+def upload_file(src, s3, root):
+	print "- uploading %s" % src
+	f = open(src)
+	s3.put(src.replace(root, "admin", f.read()))
+
+def upload_dir(path, exclude, s3):
+	for f in listdir(path):
+		if f not in exclude:
+			if isdir("%s/%s" % (path, f)) is True:
+				upload_dir("%s/%s" % (path, f))
+			else:
+				upload_file("%s/%s" % (path, f), s3, path)
+
+def upload_repo_S3_2(sourceDir, atid, atsk, name):
+
+	root = sourceDir
+	exclude = [".DS_Store"]
+
+	_atid = atid
+	_atsk = atsk
+
+	_dT = str(datetime.now())
+
+	bucket = _dT + '_' + name
+
+	s3 = S3Bucket(bucket, access_key=_atid, secret_key=_atsk, base_url="http://%s.s3.amazonaws.com" % bucket)
+
+	upload_dir(root, exclude, s3)
+
+def uploadResultToS3(awsid, awskey, bucket, sourceDir):
+	failed = open('failers', 'w')
+	c = boto.connect_s3(awsid, awskey)
+	b = c.get_bucket(bucket)
+	k = Key(b)
+	for path, dir, files in os.walk(sourceDir):
+		for file in files:
+			relpath = os.path.relpath(os.path.join(path, file))
+			if not b.get_key(relpath):
+				print 'sending...',relpath
+				k.key = relpath
+				k.set_contents_from_filename(relpath)
+				try:
+					k.set_acl('public-read')
+				except:
+					failed.write(relpath+', ')
+	failed.close()
+
+
+#creds = get_AWS_Credentials()
+	#s3_conn = create_AWS_conn(str(creds[0]), str(creds[1]))
+	#upload = upload_repo_S3_2(s3_conn, s3_path, path)
+	#upload = upload_repo_S3_2(path, 'AKIAJ6Z6KF5JJAKPDALQ', 'gfcI/yuElcuDAd1v8/8pUsRYoIaqv0qOlUYRIlxj', r_name)
+
+			'Added - ' + r_name + ' to automated backups. Thanks!'
