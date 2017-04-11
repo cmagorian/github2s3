@@ -7,12 +7,12 @@ from flask.ext.bcrypt import Bcrypt
 import logging
 
 from models import *
-from tasks import *
+#from tasks import *
 
 app = Flask(__name__)
 api = Api(app)
 bcrypt = Bcrypt(app)
-app.secret_key = 'alldefdigital'
+app.secret_key = 'I love ADD!'
 
 logging.basicConfig()
 
@@ -157,10 +157,10 @@ api.add_resource(AddRepo, '/api/repo')
 api.add_resource(Setts, '/api/settings')
 
 if __name__ == '__main__':
-	app.config.from_object(Config())
+	#app.config.from_object(Config())
 
-	scheduler = APScheduler()
-	scheduler.init_app(app)
-	scheduler.start()
+	#scheduler = APScheduler()
+	#scheduler.init_app(app)
+	#scheduler.start()
 
 	app.run(host='0.0.0.0')

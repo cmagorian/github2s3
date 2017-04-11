@@ -6,9 +6,6 @@ from flask_apscheduler import APScheduler
 from models import *
 from app import *
 
-#a = 'Test'
-#b = 'It'
-
 scheduler = APScheduler()
 
 class Config(object):

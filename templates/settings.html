@@ -2,7 +2,7 @@
 {% block content %}
 <style type="text/css">
 	.text-center {
-		margin-top: 5%;
+		margin-top: 15%;
 	}
 </style>
 <div class="container">
@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
 		$('#backups').prop('checked', false);
 	}
 
-	$('#buf').val({{ buf }});
+	$('#buf').val('{{ buf }}');
 });
 </script>
 {% endblock %}
